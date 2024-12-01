@@ -16,16 +16,12 @@
 - **Automated Content:** Generate compelling and mouthwatering menu descriptions automatically using Gemma 2.
 - **OCR Digitization:** Seamlessly convert your existing paper menus into digital format with Gamini 1.5 Flash.
 - **Multilingual Support:** Cater to a global audience by creating menus in multiple languages.
-- **Customization Options:** Tailor your menus with various fonts, colors, and layouts to match your brand.
-- **Easy Export:** Download your menus in various formats (PDF, JPG, PNG) for printing or online sharing.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
 - Bun javascript runtime
-
-* Bun javascript runtime
 
 ### Steps
 
@@ -37,7 +33,27 @@
    bun run dev
    ```
 
-📊 How It Works
+### 📊 How It Works
 
-- Upload an image of a restaurant menu.
-- AI generates professional menu visuals and descriptions.
+- Upload: Simply upload a menu image.
+- Extract: MenuVision automatically identifies and extracts all menu items.
+- Enhance: AI generates mouthwatering descriptions and stunning food photos.
+- Digitize: Your interactive digital menu is ready to use!
+
+### Technology Stack
+
+    - Frontend: React with TypeScript, Tailwind CSS
+    - AI: Google Gemini, Together AI (Gemma-2b-it, FLUX.1-schnell)
+
+### API Endpoints
+
+    - /api/img (Menu Processing) - Extracts menu data from images.
+    - /api/menuItemDes (Description Generation) - Generates item descriptions.
+    - /api/imgGenerate (Image Generation) - Creates professional food photography.
+
+###Benefits
+
+- Modernize menus: Enhance your online presence with interactive digital menus.
+- Save time and effort: Automate menu digitization and eliminate manual data entry.
+- Boost appeal: Entice customers with professional food photography and compelling descriptions.
+- Increase efficiency: Streamline online ordering and improve customer experience.
