@@ -14,7 +14,7 @@ const { title } = Astro.props;
     <meta name="description" content="Astro description" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content="MenuGenerator+" />
+    <meta name="generator" content="MenuGenerator" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,6 +28,114 @@ const { title } = Astro.props;
     <title>{title}</title>
   </head>
   <body>
+    <header class="bg-white border-b">
+      <nav class="mx-auto max-w-7xl px-6 lg:px-8" aria-label="Top">
+        <div class="flex w-full items-center justify-between py-3">
+          <div class="flex items-center">
+            <a href="/" class="text-2xl font-bold text-gray-900">
+              Menu<span class="text-orange-500 text-lg">Generator</span>
+            </a>
+          </div>
+          <div class="ml-10 space-x-8">
+            <a
+              href="#generate"
+              class="text-sm font-semibold text-gray-700 hover:text-orange-500"
+            >
+              Generate Menu
+            </a>
+            <a
+              href="#features"
+              class="text-sm font-semibold text-gray-700 hover:text-orange-500"
+            >
+              Features
+            </a>
+          </div>
+        </div>
+      </nav>
+    </header>
     <slot />
+    <footer class="bg-white border-t">
+      <div class="mx-auto max-w-7xl px-6 py-6 lg:px-8">
+        <div class="xl:grid xl:grid-cols-3 xl:gap-8">
+          <!-- Brand section -->
+          <div class="space-y-4">
+            <a href="/" class="text-xl font-bold text-gray-900">
+              Menu<span class="text-orange-500">Generator</span>
+            </a>
+            <p class="text-sm text-gray-600">
+              Transform your menu into beautiful, social media-ready images with
+              our AI-powered generator.
+            </p>
+          </div>
+          <div class="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900">Product</h3>
+              <ul role="list" class="mt-4 space-y-4">
+                <li>
+                  <a
+                    href="#generate"
+                    class="text-sm text-gray-600 hover:text-orange-500"
+                  >
+                    Generate Menu
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#features"
+                    class="text-sm text-gray-600 hover:text-orange-500"
+                  >
+                    Features
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#pricing"
+                    class="text-sm text-gray-600 hover:text-orange-500"
+                  >
+                    Pricing
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 class="text-sm font-semibold text-gray-900">Support</h3>
+              <ul role="list" class="mt-4 space-y-4">
+                <li>
+                  <a
+                    href="#contact"
+                    class="text-sm text-gray-600 hover:text-orange-500"
+                  >
+                    Contact
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#privacy"
+                    class="text-sm text-gray-600 hover:text-orange-500"
+                  >
+                    Privacy
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#terms"
+                    class="text-sm text-gray-600 hover:text-orange-500"
+                  >
+                    Terms
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Copyright -->
+        <div class="mt-8 border-t pt-8">
+          <p class="text-sm text-gray-600">
+            © {new Date().getFullYear()} MenuGenerator. All rights reserved.
+          </p>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>
