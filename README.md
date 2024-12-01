@@ -47,9 +47,9 @@
 
 ### API Endpoints
 
-    - /api/img (Menu Processing) - Extracts menu data from images.
-    - /api/menuItemDes (Description Generation) - Generates item descriptions.
-    - /api/imgGenerate (Image Generation) - Creates professional food photography.
+    - /api/img (Menu Processing) - Extracts menu data from images. Utilizes Google Gemini 1.5 Flash for precise menu text extraction.
+    - /api/menuItemDes (Description Generation) - Generates item descriptions. Utilizes Together AI Gemma-2b-it for detailed and engaging descriptions.
+    - /api/imgGenerate (Image Generation) - Creates professional food photography. Utilizes Together AI FLUX.1-schnell for high-quality food images.
 
 ###Benefits
 
