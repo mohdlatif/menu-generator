@@ -8,6 +8,7 @@ interface MenuItem {
   description: string;
   category: string;
   aiDescription?: string;
+  imageBase64?: string;
 }
 
 export default function ImageUpload() {
@@ -33,6 +34,29 @@ export default function ImageUpload() {
           return { ...item, aiDescription: data.result };
         } catch (error) {
           console.error(`Error fetching description for ${item.name}:`, error);
+          return item;
+        }
+      })
+    );
+    return updatedItems;
+  };
+
+  const fetchMenuItemImages = async (items: MenuItem[]) => {
+    const updatedItems = await Promise.all(
+      items.map(async (item) => {
+        try {
+          const response = await fetch("/api/imgGenerate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              name: item.name,
+              description: item.aiDescription,
+            }),
+          });
+          const data = await response.json();
+          return { ...item, imageBase64: data.image.b64_json };
+        } catch (error) {
+          console.error(`Error generating image for ${item.name}:`, error);
           return item;
         }
       })
@@ -73,8 +97,11 @@ export default function ImageUpload() {
         data.menuItems
       );
 
-      // Group items by category with descriptions
-      const groupedItems = itemsWithDescriptions.reduce(
+      // Fetch images for all items
+      const itemsWithImages = await fetchMenuItemImages(itemsWithDescriptions);
+
+      // Group items by category with descriptions and images
+      const groupedItems = itemsWithImages.reduce(
         (acc: Record<string, MenuItem[]>, item: MenuItem) => {
           if (!acc[item.category]) {
             acc[item.category] = [];
@@ -85,7 +112,7 @@ export default function ImageUpload() {
         {}
       );
 
-      setMenuData({ menuItems: itemsWithDescriptions });
+      setMenuData({ menuItems: itemsWithImages });
       setGroupedItems(groupedItems);
 
       toast.success("Menu Uploaded Successfully!", {
@@ -205,6 +232,15 @@ export default function ImageUpload() {
                             {item.price}
                           </span>
                         </div>
+                        {item.imageBase64 && (
+                          <div className="mt-2 mb-2">
+                            <img
+                              src={`data:image/jpeg;base64,${item.imageBase64}`}
+                              alt={item.name}
+                              className="w-full h-48 object-cover rounded-lg"
+                            />
+                          </div>
+                        )}
                         {item.description && (
                           <div className="text-xs text-gray-500 mt-1">
                             {item.description}
