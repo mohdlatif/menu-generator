@@ -1,5 +1,6 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import ImageUpload from "@/components/upload.tsx";
 ---
 
 <Layout title="MenuGenerator">
@@ -39,7 +40,10 @@ import Layout from "@/layouts/Layout.astro";
         </div>
       </div>
     </div>
-    <div id="generate">Generate image here</div>
+
+    <div class="bg-gray-50 pt-4 pb-24" id="generate">
+      <ImageUpload client:load />
+    </div>
 
     <!-- Features Section -->
     <div id="features" class="bg-gray-50 py-24 sm:py-32">
