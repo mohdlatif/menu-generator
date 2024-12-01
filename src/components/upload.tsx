@@ -12,6 +12,12 @@ interface MenuItem {
 export default function ImageUpload() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [menuData, setMenuData] = useState<{ menuItems: MenuItem[] } | null>(
+    null
+  );
+  const [groupedItems, setGroupedItems] = useState<Record<string, MenuItem[]>>(
+    {}
+  );
 
   const onDrop = async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -53,36 +59,12 @@ export default function ImageUpload() {
         {}
       );
 
+      setMenuData(data);
+      setGroupedItems(groupedItems);
+
       toast.success("Menu Uploaded Successfully!", {
-        description: (
-          <div className="mt-2 max-h-[60vh] overflow-y-auto">
-            <div className="font-medium mb-2">Extracted Menu Items:</div>
-            {(Object.entries(groupedItems) as [string, MenuItem[]][]).map(
-              ([category, items]) => (
-                <div key={category} className="mb-3">
-                  <div className="text-sm font-semibold text-violet-600 mb-1">
-                    {category}
-                  </div>
-                  <ul className="list-disc pl-4 space-y-1">
-                    {items.map((item: MenuItem, index: number) => (
-                      <li key={index} className="text-sm">
-                        <span className="font-medium">{item.name}</span>
-                        <span className="text-gray-600"> - {item.price}</span>
-                        <div className="text-xs text-gray-500">
-                          {item.description}
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )
-            )}
-            {(!data.menuItems || data.menuItems.length === 0) && (
-              <p className="text-sm text-gray-600">No menu items detected</p>
-            )}
-          </div>
-        ),
-        duration: 8000,
+        description: `${data.menuItems.length} menu items extracted and categorized`,
+        duration: 1500,
         className: "my-toast",
       });
     } catch (error) {
@@ -104,9 +86,8 @@ export default function ImageUpload() {
     },
     multiple: false,
   });
-
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-6xl mx-auto">
       <Toaster />
       <div
         {...getRootProps()}
@@ -175,6 +156,46 @@ export default function ImageUpload() {
       </div>
 
       {error && <div className="mt-2 text-sm text-red-600">{error}</div>}
+
+      {menuData && menuData.menuItems && (
+        <div className="mt-8">
+          {/* <div className="font-medium mb-4 text-lg">Extracted Menu Items:</div> */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {(Object.entries(groupedItems) as [string, MenuItem[]][]).map(
+              ([category, items]) => (
+                <div
+                  key={category}
+                  className="bg-white rounded-lg p-4 shadow-sm"
+                >
+                  <div className="text-lg font-semibold text-violet-600 mb-3 pb-2 border-b">
+                    {category}
+                  </div>
+                  <ul className="space-y-3">
+                    {items.map((item: MenuItem, index: number) => (
+                      <li key={index} className="text-sm">
+                        <div className="flex justify-between items-start">
+                          <span className="font-medium">{item.name}</span>
+                          <span className="text-violet-600 font-medium ml-2">
+                            {item.price}
+                          </span>
+                        </div>
+                        {item.description && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            {item.description}
+                          </div>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            )}
+          </div>
+          {(!menuData.menuItems || menuData.menuItems.length === 0) && (
+            <p className="text-sm text-gray-600">No menu items detected</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }
