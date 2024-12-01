@@ -1,5 +1,13 @@
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { Toaster, toast } from "sonner";
+
+interface MenuItem {
+  name: string;
+  price: string;
+  description: string;
+  category: string;
+}
 
 export default function ImageUpload() {
   const [isLoading, setIsLoading] = useState(false);
@@ -32,10 +40,57 @@ export default function ImageUpload() {
       }
 
       const data = await response.json();
-      console.log("Upload successful:", data);
+
+      // Group items by category
+      const groupedItems = data.menuItems.reduce(
+        (acc: Record<string, MenuItem[]>, item: MenuItem) => {
+          if (!acc[item.category]) {
+            acc[item.category] = [];
+          }
+          acc[item.category].push(item);
+          return acc;
+        },
+        {}
+      );
+
+      toast.success("Menu Uploaded Successfully!", {
+        description: (
+          <div className="mt-2 max-h-[60vh] overflow-y-auto">
+            <div className="font-medium mb-2">Extracted Menu Items:</div>
+            {(Object.entries(groupedItems) as [string, MenuItem[]][]).map(
+              ([category, items]) => (
+                <div key={category} className="mb-3">
+                  <div className="text-sm font-semibold text-violet-600 mb-1">
+                    {category}
+                  </div>
+                  <ul className="list-disc pl-4 space-y-1">
+                    {items.map((item: MenuItem, index: number) => (
+                      <li key={index} className="text-sm">
+                        <span className="font-medium">{item.name}</span>
+                        <span className="text-gray-600"> - {item.price}</span>
+                        <div className="text-xs text-gray-500">
+                          {item.description}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            )}
+            {(!data.menuItems || data.menuItems.length === 0) && (
+              <p className="text-sm text-gray-600">No menu items detected</p>
+            )}
+          </div>
+        ),
+        duration: 8000,
+        className: "my-toast",
+      });
     } catch (error) {
       console.error("Upload error:", error);
       setError("Failed to upload image");
+      toast.error("Failed to process menu image", {
+        description: "Please try again with a clearer image",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -52,6 +107,7 @@ export default function ImageUpload() {
 
   return (
     <div className="w-full max-w-md mx-auto">
+      <Toaster />
       <div
         {...getRootProps()}
         className={`relative border-2 border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors
