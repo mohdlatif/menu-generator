@@ -41,5 +41,8 @@
   },
   "devDependencies": {
     "@types/google.visualization": "^0.0.74"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }

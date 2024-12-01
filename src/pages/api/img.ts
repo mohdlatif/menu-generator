@@ -37,7 +37,7 @@ Only include items that are clearly visible and readable. Maintain the exact pri
     };
 
     const result = await model.generateContent([prompt, image]);
-    const response = await result.response;
+    const response = result.response;
     const text = response.text().trim();
 
     // Clean up markdown code blocks if present
