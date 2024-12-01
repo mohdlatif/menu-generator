@@ -7,6 +7,7 @@ interface MenuItem {
   price: string;
   description: string;
   category: string;
+  aiDescription?: string;
 }
 
 export default function ImageUpload() {
@@ -18,6 +19,26 @@ export default function ImageUpload() {
   const [groupedItems, setGroupedItems] = useState<Record<string, MenuItem[]>>(
     {}
   );
+
+  const fetchMenuItemDescriptions = async (items: MenuItem[]) => {
+    const updatedItems = await Promise.all(
+      items.map(async (item) => {
+        try {
+          const response = await fetch("/api/menuItemDes", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: item.name }),
+          });
+          const data = await response.json();
+          return { ...item, aiDescription: data.result };
+        } catch (error) {
+          console.error(`Error fetching description for ${item.name}:`, error);
+          return item;
+        }
+      })
+    );
+    return updatedItems;
+  };
 
   const onDrop = async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
@@ -47,8 +68,13 @@ export default function ImageUpload() {
 
       const data = await response.json();
 
-      // Group items by category
-      const groupedItems = data.menuItems.reduce(
+      // Fetch descriptions for all items
+      const itemsWithDescriptions = await fetchMenuItemDescriptions(
+        data.menuItems
+      );
+
+      // Group items by category with descriptions
+      const groupedItems = itemsWithDescriptions.reduce(
         (acc: Record<string, MenuItem[]>, item: MenuItem) => {
           if (!acc[item.category]) {
             acc[item.category] = [];
@@ -59,7 +85,7 @@ export default function ImageUpload() {
         {}
       );
 
-      setMenuData(data);
+      setMenuData({ menuItems: itemsWithDescriptions });
       setGroupedItems(groupedItems);
 
       toast.success("Menu Uploaded Successfully!", {
@@ -182,6 +208,11 @@ export default function ImageUpload() {
                         {item.description && (
                           <div className="text-xs text-gray-500 mt-1">
                             {item.description}
+                          </div>
+                        )}
+                        {item.aiDescription && (
+                          <div className="text-xs text-gray-600 mt-2">
+                            {item.aiDescription}
                           </div>
                         )}
                       </li>
